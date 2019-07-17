@@ -77,7 +77,7 @@ void HAL_MspInit(void)
 
   /** DISABLE: JTAG-DP Disabled and SW-DP Disabled 
   */
-  __HAL_AFIO_REMAP_SWJ_DISABLE();
+  //__HAL_AFIO_REMAP_SWJ_DISABLE();
 
   /* USER CODE BEGIN MspInit 1 */
 
@@ -168,7 +168,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
     __HAL_RCC_ADC1_CLK_DISABLE();
   
     /**ADC1 GPIO Configuration    
-    PA0-WKUP     ------> ADC1_IN0
+    PA0-WKUP  ----> ADC1_IN0
     PA1     ------> ADC1_IN1
     PA2     ------> ADC1_IN2
     PA3     ------> ADC1_IN3

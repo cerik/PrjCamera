@@ -42,7 +42,20 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
+extern ADC_HandleTypeDef hadc1;
+extern DMA_HandleTypeDef hdma_adc1;
 
+extern I2C_HandleTypeDef hi2c1;
+extern I2C_HandleTypeDef hi2c2;
+
+extern TIM_HandleTypeDef htim2;
+extern TIM_HandleTypeDef htim3;
+
+extern UART_HandleTypeDef huart1;
+
+#ifdef IWDG_ENABLE
+extern IWDG_HandleTypeDef hiwdg;
+#endif
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/

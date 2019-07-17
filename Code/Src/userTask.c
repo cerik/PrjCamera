@@ -20,8 +20,11 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "FreeRTOS.h"
+#include "cmsis_os.h"
 #include "task.h"
 #include "main.h"
+#include "userTask.h"
+#include "bsp.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */     
@@ -35,7 +38,11 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+      
+#define BIT_0   ( 1 << 0 )
+#define BIT_1   ( 1 << 1 )
+#define BIT_2   ( 1 << 2 )
+      
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -45,6 +52,9 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
+      
+osThreadId TaskCmdHandleNaHandle;
+osThreadId TaskDBGatherNamHandle;
 
 /* USER CODE END Variables */
 
@@ -55,7 +65,64 @@
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
-     
+
+void SetComMsgEvent(void)
+{
+    osSignalSet( TaskCmdHandleNaHandle, BIT_1);
+}
+
+void CreateUserTask(void)
+{
+    /* Create the thread(s) */
+    /* definition and creation of TaskCmdHandleNa */
+    osThreadDef(TaskCmdHandleNa, TaskCmdHandle, osPriorityNormal, 0, 64);
+    TaskCmdHandleNaHandle = osThreadCreate(osThread(TaskCmdHandleNa), NULL);
+
+    /* definition and creation of TaskDBGatherNam */
+    osThreadDef(TaskDBGatherNam, TaskDBGather, osPriorityIdle, 0, 64);
+    TaskDBGatherNamHandle = osThreadCreate(osThread(TaskDBGatherNam), NULL);
+}
+
+/* USER CODE BEGIN Header_TaskCmdHandle */
+/**
+  * @brief  Function implementing the TaskCmdHandleNa thread.
+  * @param  argument: Not used 
+  * @retval None
+  */
+/* USER CODE END Header_TaskCmdHandle */
+void TaskCmdHandle(void const * argument)
+{
+  /* USER CODE BEGIN 5 */
+    StartAdc();
+    
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1000);
+  }
+  /* USER CODE END 5 */ 
+}
+
+/* USER CODE BEGIN Header_TaskDBGather */
+/**
+* @brief Function implementing the TaskDBGatherNam thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_TaskDBGather */
+void TaskDBGather(void const * argument)
+{
+  /* USER CODE BEGIN TaskDBGather */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1000);
+#ifdef IWDG_ENABLE
+    HAL_IWDG_Refresh(&hiwdg);
+#endif
+  }
+  /* USER CODE END TaskDBGather */
+}
 /* USER CODE END Application */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

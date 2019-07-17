@@ -21,7 +21,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
-
+#include "userTask.h"
+      
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -49,15 +50,14 @@ DMA_HandleTypeDef hdma_adc1;
 I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c2;
 
-IWDG_HandleTypeDef hiwdg;
-
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 
 UART_HandleTypeDef huart1;
 
-osThreadId TaskCmdHandleNaHandle;
-osThreadId TaskDBGatherNamHandle;
+#ifdef IWDG_ENABLE
+IWDG_HandleTypeDef hiwdg;
+#endif
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -69,15 +69,42 @@ static void MX_DMA_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_I2C2_Init(void);
-static void MX_IWDG_Init(void);
+
 static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_USART1_UART_Init(void);
 void TaskCmdHandle(void const * argument);
 void TaskDBGather(void const * argument);
 
+#ifdef IWDG_ENABLE
+static void MX_IWDG_Init(void);
+#endif
+
 /* USER CODE BEGIN PFP */
 
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
+#ifdef __GNUC__
+/* With GCC, small printf (option LD Linker->Libraries->Small printf
+   set to 'Yes') calls __io_putchar() */
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#else
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif /* __GNUC__ */
+/* USER CODE END 0 */
+
+/**
+  * @brief  Retargets the C library printf function to the USART.
+  * @param  None
+  * @retval None
+  */
+PUTCHAR_PROTOTYPE
+{
+    /* Place your implementation of fputc here */
+    /* e.g. write a character to the USART1 and Loop until the end of transmission */
+    HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 0xFFFF);
+    return ch;
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -118,7 +145,9 @@ int main(void)
   MX_ADC1_Init();
   MX_I2C1_Init();
   MX_I2C2_Init();
+#ifdef IWDG_ENABLE
   MX_IWDG_Init();
+#endif
   MX_TIM2_Init();
   MX_TIM3_Init();
   MX_USART1_UART_Init();
@@ -142,19 +171,11 @@ int main(void)
   /* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
 
-  /* Create the thread(s) */
-  /* definition and creation of TaskCmdHandleNa */
-  osThreadDef(TaskCmdHandleNa, TaskCmdHandle, osPriorityNormal, 0, 64);
-  TaskCmdHandleNaHandle = osThreadCreate(osThread(TaskCmdHandleNa), NULL);
-
-  /* definition and creation of TaskDBGatherNam */
-  osThreadDef(TaskDBGatherNam, TaskDBGather, osPriorityIdle, 0, 64);
-  TaskDBGatherNamHandle = osThreadCreate(osThread(TaskDBGatherNam), NULL);
-
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
-
+    CreateUserTask();
+    
   /* Start scheduler */
   osKernelStart();
   
@@ -400,6 +421,7 @@ static void MX_I2C2_Init(void)
 
 }
 
+#ifdef IWDG_ENABLE
 /**
   * @brief IWDG Initialization Function
   * @param None
@@ -427,6 +449,7 @@ static void MX_IWDG_Init(void)
   /* USER CODE END IWDG_Init 2 */
 
 }
+#endif
 
 /**
   * @brief TIM2 Initialization Function
@@ -631,42 +654,6 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE END 4 */
 
-/* USER CODE BEGIN Header_TaskCmdHandle */
-/**
-  * @brief  Function implementing the TaskCmdHandleNa thread.
-  * @param  argument: Not used 
-  * @retval None
-  */
-/* USER CODE END Header_TaskCmdHandle */
-void TaskCmdHandle(void const * argument)
-{
-
-  /* USER CODE BEGIN 5 */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END 5 */ 
-}
-
-/* USER CODE BEGIN Header_TaskDBGather */
-/**
-* @brief Function implementing the TaskDBGatherNam thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_TaskDBGather */
-void TaskDBGather(void const * argument)
-{
-  /* USER CODE BEGIN TaskDBGather */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END TaskDBGather */
-}
 
 /**
   * @brief  This function is executed in case of error occurrence.
