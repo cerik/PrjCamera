@@ -3,16 +3,18 @@
 #include "main.h"
 #include "cqueue.h"
 #include "userTask.h"
+#include "sysdb.h"
 
 #define MSG_BUFFER_SIZE 64
 
-static tCQueue lgMsgQueue;
+tCQueue gMsgQueue;
+
 static UINT8 lgMsgBuf[MSG_BUFFER_SIZE];
 static UINT8 lgComRxDat;
 
 void InitCmdProcess(void)
 {
-    CQueueInit(&lgMsgQueue,lgMsgBuf,MSG_BUFFER_SIZE);
+    CQueueInit(&gMsgQueue,lgMsgBuf,MSG_BUFFER_SIZE);
 }
 
 /*
@@ -49,8 +51,8 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle)
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 {
   /* Set transmission flag: transfer complete */
-    CQueuePut(&lgMsgQueue,&lgComRxDat,1);
-    if(CQueueGetFreeSize(&lgMsgQueue) >= 16)
+    CQueuePut(&gMsgQueue,&lgComRxDat,1);
+    if(CQueueGetMsgSize(&gMsgQueue) >= sizeof(tHostReqMsg))
     {
         SetComMsgEvent();
     }

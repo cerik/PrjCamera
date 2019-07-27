@@ -6,7 +6,7 @@
 
 /* Size of array containing ADC converted values: set to ADC sequencer number of ranks converted, 
 // to have a rank in each address */
-#define ADCCONVERTEDVALUES_BUFFER_SIZE ((uint32_t)    10)
+#define ADCCONVERTEDVALUES_BUFFER_SIZE ((uint32_t)    20)
 
 #define ADC_BIT_RESOLUTION 4095.f
 
@@ -18,94 +18,6 @@
 static __IO uint32_t   aADCxConvertedValues[ADCCONVERTEDVALUES_BUFFER_SIZE];
 
 /* Variable to report ADC sequencer status */
-//static uint8_t ubSequenceCompleted = RESET;     /* Set when all ranks of the sequence have been converted */
-
-static float lgCvtFalue[3];
-
-
-/*******************************************************************************
- * @Description:
- *   Set duty cycle for a special channel.
- * @Parameters:
- *   channel ---- target channel will be set,value=[1~6];
- *        [0] = TIM1_CH1:PWM_PUMP
- *        [1] = TIM3_CH3:PWM_PAS_1
- *        [2] = TIM3_CH4 = PWM_PAS_2
- *        [3] = TIM4_CH3 = PWM_PEDAL
- *        [4] = TIM4_CH4 = PWM_DEFROST
- *        [5] = TIM2_CH1 = PWM_DRIVER
- *   precent ---- duty cycle, value=[0~100]%
- * @Return: none;
- */
-void SetPWM(uint8_t channel, uint8_t precent)
-{
-    //TIM_OC_InitTypeDef sConfig;
-    HAL_StatusTypeDef  mSts = HAL_OK;
-#if 0
-    sConfig.OCMode       = TIM_OCMODE_PWM1;
-    sConfig.OCPolarity   = TIM_OCPOLARITY_HIGH;
-    sConfig.OCFastMode   = TIM_OCFAST_DISABLE;
-    sConfig.OCNPolarity  = TIM_OCNPOLARITY_HIGH;
-    sConfig.OCNIdleState = TIM_OCNIDLESTATE_RESET;
-
-    sConfig.OCIdleState  = TIM_OCIDLESTATE_RESET;
-
-    /* Set the pulse value for channel 1 */
-    sConfig.Pulse = (TIMER_PWM_CLK+1) * precent / 100;
-    switch(channel)
-    {
-    case 1://TIM1_CH1 = PWM_PUMP
-        mSts =  HAL_TIM_PWM_ConfigChannel(&htim1, &sConfig, TIM_CHANNEL_1);
-        if (HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1) != HAL_OK)
-        {
-            Error_Handler();/* PWM Generation Error */
-        }
-        break;
-    case 2://TIM3_CH3 = PWM_PAS_1
-        mSts =  HAL_TIM_PWM_ConfigChannel(&htim3, &sConfig, TIM_CHANNEL_3);
-        if (HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3) != HAL_OK)
-        {
-            Error_Handler();
-        }
-        break;
-    case 3://TIM3_CH4 = PWM_PAS_2
-        mSts =  HAL_TIM_PWM_ConfigChannel(&htim3, &sConfig, TIM_CHANNEL_4);
-        if (HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4) != HAL_OK)
-        {
-            Error_Handler();/* PWM Generation Error */
-        }
-        break;
-    case 4://TIM4_CH3 = PWM_PEDAL
-        mSts =  HAL_TIM_PWM_ConfigChannel(&htim4, &sConfig, TIM_CHANNEL_3);
-        if (HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_3) != HAL_OK)
-        {
-            Error_Handler();/* PWM Generation Error */
-        }
-        break;
-    case 5://TIM4_CH4 = PWM_DEFROST
-        mSts =  HAL_TIM_PWM_ConfigChannel(&htim4, &sConfig, TIM_CHANNEL_4);
-        if (HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4) != HAL_OK)
-        {
-            Error_Handler();/* PWM Generation Error */
-        }
-        break;
-    case 6://TIM2_CH1 = PWM_DRIVER
-        mSts = HAL_TIM_PWM_ConfigChannel(&htim2, &sConfig, TIM_CHANNEL_1);
-        if (HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1) != HAL_OK)
-        {
-            Error_Handler();/* PWM Generation Error */
-        }
-        break;
-    default:
-        mSts = HAL_ERROR;
-        break;
-    }
-#endif
-    if (mSts != HAL_OK)
-    {
-        Error_Handler();/* Configuration Error */
-    }
-}
 
 HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 {
@@ -130,30 +42,36 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   return HAL_OK;
 }
 
-/*******************************************************************************
- * MOS_POW ----> PB2
- */
-void SetMosPower(uint8_t enable)
-{
-   // HAL_GPIO_WritePin(MOS_POW_GPIO_Port,MOS_POW_Pin,enable?GPIO_PIN_SET:GPIO_PIN_RESET);
-}
 
 /*******************************************************************************
- * 12V_P_ON ----> PB5
+ * ACOK ----> PB9
  */
-void SetSysPower(uint8_t enable)
+UINT8 GetACOK(void)
 {
-   //HAL_GPIO_WritePin(V12_P_ON_GPIO_Port,V12_P_ON_Pin,enable?GPIO_PIN_SET:GPIO_PIN_RESET);
+    return HAL_GPIO_ReadPin(ACOK_GPIO_Port,ACOK_Pin);
 }
 
-/*******************************************************************************
- * KEY ----> PA1
- */
-uint8_t GetKeySts(void)
+
+/*******************************************************************************/
+void SetLED(UINT8 Channel,UINT8 Enable)
 {
-    return 0;//HAL_GPIO_ReadPin(KEY_GPIO_Port,KEY_Pin);
+    if(Channel == 0)
+    {
+        HAL_GPIO_WritePin(LED1_GPIO_Port,LED1_Pin,Enable?GPIO_PIN_RESET:GPIO_PIN_SET);
+    }
+    else
+    {
+        HAL_GPIO_WritePin(LED2_GPIO_Port,LED2_Pin,Enable?GPIO_PIN_RESET:GPIO_PIN_SET);
+    }
 }
 
+void ToggleLED(UINT8 channel)
+{
+    if(channel == 0)
+        HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
+    else
+        HAL_GPIO_TogglePin(LED2_GPIO_Port,LED2_Pin);
+}
 
 /*******************************************************************************
  * @Description:
@@ -164,7 +82,7 @@ void StartAdc(void)
     /* Start ADC conversion on regular group with transfer by DMA */
     if (HAL_ADC_Start_DMA(&hadc1,
                         (uint32_t *)aADCxConvertedValues,
-                        ADCCONVERTEDVALUES_BUFFER_SIZE*1
+                        ADCCONVERTEDVALUES_BUFFER_SIZE
                        ) != HAL_OK)
     {
         /* Start Error */
@@ -187,16 +105,6 @@ void StartAdc(void)
     /*       "HAL_ADC_Start_DMA()", this function will keep DMA transfer      */
     /*       active.                                                          */
     HAL_ADC_Start(&hadc1);
-}
-
-float GetPwrSupply(void)
-{
-    return 0.0;//lgCvtFalue[ADC_POWER_SUPPLY];
-}
-
-float GetCurrentSupply(void)
-{
-    return 0.0;//lgCvtFalue[ADC_CURRENT_SUPPLY];
 }
 
 BOOL SendComMsg(UINT8 *pBuffer,UINT16 len)

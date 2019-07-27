@@ -16,17 +16,10 @@
 #define TIMER_PWM_CLK (80-1) 
 
 
-void SetPWM(UINT8 Channel, UINT8 precent);
-void SetMosPower(UINT8 enable);
-void SetSysPower(UINT8 enable);
-void StartAdc(void);
-
-float GetPwrSupply(void);
-float GetCurrentSupply(void);
-float GetNtcTemperature(void);
-
-UINT8 GetCanAddr(void);
-UINT8 GetKeySts(void);
+UINT8 GetACOK(void);
+void  SetLED(UINT8 Channel,UINT8 Enable);
+void  ToggleLED(UINT8 channel);
+void  StartAdc(void);
 
 void ProcessADCData(void);
 

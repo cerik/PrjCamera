@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=E:/Project/PrjCameraLi/Code/Inc
+HeaderPath=E:/Project/PrjCamera/Code/Inc
 HeaderFiles=FreeRTOSConfig.h;stm32f1xx_it.h;stm32f1xx_hal_conf.h;main.h;
-SourcePath=E:/Project/PrjCameraLi/Code/Src
+SourcePath=E:/Project/PrjCamera/Code/Src
 SourceFiles=freertos.c;stm32f1xx_it.c;stm32f1xx_hal_msp.c;main.c;
 
 [PreviousLibFiles]

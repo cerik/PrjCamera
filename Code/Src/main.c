@@ -49,6 +49,10 @@ DMA_HandleTypeDef hdma_adc1;
 
 I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c2;
+DMA_HandleTypeDef hdma_i2c1_tx;
+DMA_HandleTypeDef hdma_i2c1_rx;
+DMA_HandleTypeDef hdma_i2c2_rx;
+DMA_HandleTypeDef hdma_i2c2_tx;
 
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
@@ -63,23 +67,21 @@ IWDG_HandleTypeDef hiwdg;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_DMA_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_I2C2_Init(void);
-
 static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_USART1_UART_Init(void);
-void TaskCmdHandle(void const * argument);
-void TaskDBGather(void const * argument);
-
+static void MX_DMA_Init(void);
 #ifdef IWDG_ENABLE
 static void MX_IWDG_Init(void);
 #endif
 
+void SystemClock_Config(void);
+void TaskCmdHandle(void const * argument);
+void TaskDBGather(void const * argument);
 /* USER CODE BEGIN PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -109,7 +111,13 @@ PUTCHAR_PROTOTYPE
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+#ifdef __GNUC__
+/* With GCC, small printf (option LD Linker->Libraries->Small printf
+   set to 'Yes') calls __io_putchar() */
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#else
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif /* __GNUC__ */
 /* USER CODE END 0 */
 
 /**
@@ -141,7 +149,9 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  
   MX_DMA_Init();
+  
   MX_ADC1_Init();
   MX_I2C1_Init();
   MX_I2C2_Init();
@@ -355,6 +365,10 @@ static void MX_ADC1_Init(void)
 
 /**
   * @brief I2C1 Initialization Function
+  *  BQ24725, Changer managment unit;
+  *    
+  *     PCLK1 = 8MHz;
+  *     I2C1_CLK = 50Khz;
   * @param None
   * @retval None
   */
@@ -369,7 +383,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.ClockSpeed = 400000;
+  hi2c1.Init.ClockSpeed = 50000;
   hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
   hi2c1.Init.OwnAddress1 = 32;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
@@ -389,6 +403,7 @@ static void MX_I2C1_Init(void)
 
 /**
   * @brief I2C2 Initialization Function
+  *     PCLK1 = 8MHz;
   * @param None
   * @retval None
   */
@@ -613,10 +628,35 @@ static void MX_DMA_Init(void)
   __HAL_RCC_DMA1_CLK_ENABLE();
 
   /* DMA interrupt init */
+#ifdef ENABLE_ADC_DMA
   /* DMA1_Channel1_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 5, 0);
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 5, 0);//ADC1
   HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
-
+#endif
+  
+#ifdef ENABLE_I2C2_TX_DMA
+  /* DMA1_Channel4_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel4_IRQn, 5, 0);//I2C2_TX
+  HAL_NVIC_EnableIRQ(DMA1_Channel4_IRQn);
+#endif
+  
+#ifdef ENABLE_I2C2_RX_DMA
+  /* DMA1_Channel5_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 5, 0);//I2C2_RX
+  HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
+#endif
+  
+#ifdef ENABLE_I2C1_TX_DMA
+  /* DMA1_Channel6_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel6_IRQn, 5, 0);//I2C1_TX
+  HAL_NVIC_EnableIRQ(DMA1_Channel6_IRQn);
+#endif
+  
+#ifdef ENABLE_I2C2_RX_DMA
+  /* DMA1_Channel7_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel7_IRQn, 5, 0);//I2C1_RX
+  HAL_NVIC_EnableIRQ(DMA1_Channel7_IRQn);
+#endif
 }
 
 /**

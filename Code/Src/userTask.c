@@ -24,7 +24,10 @@
 #include "task.h"
 #include "main.h"
 #include "userTask.h"
+#include "sysdb.h"
+#include "cqueue.h"
 #include "bsp.h"
+#include "cmdProcess.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */     
@@ -55,6 +58,8 @@
       
 osThreadId TaskCmdHandleNaHandle;
 osThreadId TaskDBGatherNamHandle;
+
+osThreadId gHtbeatTaskHandle;
 
 /* USER CODE END Variables */
 
@@ -92,15 +97,51 @@ void CreateUserTask(void)
 /* USER CODE END Header_TaskCmdHandle */
 void TaskCmdHandle(void const * argument)
 {
-  /* USER CODE BEGIN 5 */
+    osEvent mEvt;
+    UINT8   mMsgBuf[16];
+    tHostReqMsg *mComMsgPtr;
+    
+    InitCmdProcess();
+    
+    /* USER CODE BEGIN 5 */
     StartAdc();
     
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1000);
-  }
-  /* USER CODE END 5 */ 
+    /* Infinite loop */
+    StartComRxInterrupt();
+    /* Infinite loop */
+    for(;;)
+    {
+        mEvt = osSignalWait( BIT_1, 1000);
+        if(mEvt.status == osEventSignal)
+        {
+            if(BIT_1 == mEvt.value.signals )
+            {
+                mComMsgPtr = (tHostReqMsg *)mMsgBuf;
+                while(1)
+                {
+                    if((CQueueGetMsgSize(&gMsgQueue) < sizeof(tHostReqMsg)))
+                    {
+                        break;
+                    }
+                    
+                    if(mComMsgPtr->header == 0xAA55)
+                    {
+                        CQueueGet(&gMsgQueue,mMsgBuf,sizeof(tHostReqMsg),TRUE);
+                        switch(mComMsgPtr->cmd)
+                        {
+                        case 1:
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        CQueueGet(&gMsgQueue,mMsgBuf,1,TRUE);
+                    }
+                }
+            }
+        }
+    }
+    /* USER CODE END 5 */ 
 }
 
 /* USER CODE BEGIN Header_TaskDBGather */
@@ -112,16 +153,17 @@ void TaskCmdHandle(void const * argument)
 /* USER CODE END Header_TaskDBGather */
 void TaskDBGather(void const * argument)
 {
-  /* USER CODE BEGIN TaskDBGather */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1000);
+    /* USER CODE BEGIN TaskDBGather */
+    /* Infinite loop */
+    for(;;)
+    {
+        osDelay(1000);
+        ToggleLED(1);
 #ifdef IWDG_ENABLE
-    HAL_IWDG_Refresh(&hiwdg);
+        HAL_IWDG_Refresh(&hiwdg);
 #endif
-  }
-  /* USER CODE END TaskDBGather */
+    }
+    /* USER CODE END TaskDBGather */
 }
 /* USER CODE END Application */
 
