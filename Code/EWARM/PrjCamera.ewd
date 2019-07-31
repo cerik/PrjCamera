@@ -11,7 +11,7 @@
             <name>C-SPY</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>30</version>
+                <version>29</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -44,7 +44,7 @@
                 </option>
                 <option>
                     <name>MemFile</name>
-                    <state>$TOOLKIT_DIR$\CONFIG\debugger\ST\STM32F103C8.ddf</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>RunToEnable</name>
@@ -76,19 +76,19 @@
                 </option>
                 <option>
                     <name>OCDownloadVerifyAll</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>OCProductVersion</name>
-                    <state>7.10.3.6927</state>
+                    <state>8.20.1.14181</state>
                 </option>
                 <option>
                     <name>OCDynDriverList</name>
-                    <state>STLINK_ID</state>
+                    <state>ARMSIM_ID</state>
                 </option>
                 <option>
                     <name>OCLastSavedByProductVersion</name>
-                    <state>8.30.1.17146</state>
+                    <state>8.20.1.14181</state>
                 </option>
                 <option>
                     <name>UseFlashLoader</name>
@@ -112,7 +112,7 @@
                 </option>
                 <option>
                     <name>FlashLoadersV3</name>
-                    <state>$TOOLKIT_DIR$\config\flashloader\ST\FlashSTM32F10xx8.board</state>
+                    <state>$TOOLKIT_DIR$\config\flashloader\</state>
                 </option>
                 <option>
                     <name>OCImagesSuppressCheck1</name>
@@ -213,10 +213,6 @@
                 <option>
                     <name>MassEraseBeforeFlashing</name>
                     <state>0</state>
-                </option>
-                <option>
-                    <name>OCMulticoreNrOfCoresSlave</name>
-                    <state>1</state>
                 </option>
             </data>
         </settings>
@@ -954,27 +950,6 @@
             </data>
         </settings>
         <settings>
-            <name>NULINK_ID</name>
-            <archiveVersion>2</archiveVersion>
-            <data>
-                <version>0</version>
-                <wantNonLocal>1</wantNonLocal>
-                <debug>1</debug>
-                <option>
-                    <name>OCDriverInfo</name>
-                    <state>1</state>
-                </option>
-                <option>
-                    <name>DoLogfile</name>
-                    <state>0</state>
-                </option>
-                <option>
-                    <name>LogFile</name>
-                    <state>$PROJ_DIR$\cspycomm.log</state>
-                </option>
-            </data>
-        </settings>
-        <settings>
             <name>PEMICRO_ID</name>
             <archiveVersion>2</archiveVersion>
             <data>
@@ -1003,7 +978,7 @@
             <name>STLINK_ID</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>5</version>
+                <version>4</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -1012,7 +987,7 @@
                 </option>
                 <option>
                     <name>CCSTLinkInterfaceRadio</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CCSTLinkInterfaceCmdLine</name>
@@ -1021,15 +996,15 @@
                 <option>
                     <name>CCSTLinkResetList</name>
                     <version>3</version>
-                    <state>4</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CCCpuClockEdit</name>
-                    <state>64.0</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>CCSwoClockAuto</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CCSwoClockEdit</name>
@@ -1101,7 +1076,7 @@
                 </option>
                 <option>
                     <name>CCSTLinkJtagSpeedList</name>
-                    <version>1</version>
+                    <version>0</version>
                     <state>0</state>
                 </option>
                 <option>
@@ -1110,10 +1085,6 @@
                 </option>
                 <option>
                     <name>CCSTLinkDebugAccessPortRadio</name>
-                    <state>0</state>
-                </option>
-                <option>
-                    <name>CCSTLinkUseServerSelect</name>
                     <state>0</state>
                 </option>
             </data>
@@ -1218,7 +1189,7 @@
             <name>XDS100_ID</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>8</version>
+                <version>6</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -1361,7 +1332,7 @@
                 </option>
                 <option>
                     <name>CCXds100InterfaceRadio</name>
-                    <state>0</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>CCXds100InterfaceCmdLine</name>
@@ -1370,7 +1341,7 @@
                 <option>
                     <name>CCXds100ProbeList</name>
                     <version>0</version>
-                    <state>0</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>CCXds100SWOPortRadio</name>
@@ -1380,17 +1351,26 @@
                     <name>CCXds100SWOPort</name>
                     <state>1</state>
                 </option>
+            </data>
+        </settings>
+        <settings>
+            <name>NULINK_ID</name>
+            <archiveVersion>2</archiveVersion>
+            <data>
+                <version>0</version>
+                <wantNonLocal>1</wantNonLocal>
+                <debug>1</debug>
                 <option>
-                    <name>CCXDSTargetVccEnable</name>
+                    <name>OCDriverInfo</name>
+                    <state>1</state>
+                </option>
+                <option>
+                    <name>DoLogfile</name>
                     <state>0</state>
                 </option>
                 <option>
-                    <name>CCXDSTargetVoltage</name>
-                    <state>###Uninitialized###</state>
-                </option>
-                <option>
-                    <name>OCXDSDigitalStatesConfigFile</name>
-                    <state>1</state>
+                    <name>LogFile</name>
+                    <state>$PROJ_DIR$\cspycomm.log</state>
                 </option>
             </data>
         </settings>
@@ -1408,15 +1388,7 @@
                 <loadFlag>0</loadFlag>
             </plugin>
             <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\FreeRtos\FreeRtosArmPlugin.ENU.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
                 <file>$TOOLKIT_DIR$\plugins\rtos\Mbed\MbedArmPlugin.ENU.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\Mbed\MbedArmPlugin2.ENU.ewplugin</file>
                 <loadFlag>0</loadFlag>
             </plugin>
             <plugin>
@@ -1425,14 +1397,6 @@
             </plugin>
             <plugin>
                 <file>$TOOLKIT_DIR$\plugins\rtos\SafeRTOS\SafeRTOSPlugin.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\SMX\smxAwareIarArm8.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\SMX\smxAwareIarArm8BE.ewplugin</file>
                 <loadFlag>0</loadFlag>
             </plugin>
             <plugin>
@@ -1483,7 +1447,7 @@
             <name>C-SPY</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>30</version>
+                <version>29</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -1516,7 +1480,7 @@
                 </option>
                 <option>
                     <name>MemFile</name>
-                    <state>$TOOLKIT_DIR$\CONFIG\debugger\ST\STM32F103C8.ddf</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>RunToEnable</name>
@@ -1548,19 +1512,19 @@
                 </option>
                 <option>
                     <name>OCDownloadVerifyAll</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>OCProductVersion</name>
-                    <state>7.10.3.6927</state>
+                    <state>8.20.1.14181</state>
                 </option>
                 <option>
                     <name>OCDynDriverList</name>
-                    <state>STLINK_ID</state>
+                    <state>ARMSIM_ID</state>
                 </option>
                 <option>
                     <name>OCLastSavedByProductVersion</name>
-                    <state>8.30.1.17146</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>UseFlashLoader</name>
@@ -1584,7 +1548,7 @@
                 </option>
                 <option>
                     <name>FlashLoadersV3</name>
-                    <state>$TOOLKIT_DIR$\config\flashloader\ST\FlashSTM32F10xx8.board</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>OCImagesSuppressCheck1</name>
@@ -1652,7 +1616,7 @@
                 </option>
                 <option>
                     <name>OCMulticoreNrOfCores</name>
-                    <state>1</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>OCMulticoreMaster</name>
@@ -1685,10 +1649,6 @@
                 <option>
                     <name>MassEraseBeforeFlashing</name>
                     <state>0</state>
-                </option>
-                <option>
-                    <name>OCMulticoreNrOfCoresSlave</name>
-                    <state>1</state>
                 </option>
             </data>
         </settings>
@@ -2426,27 +2386,6 @@
             </data>
         </settings>
         <settings>
-            <name>NULINK_ID</name>
-            <archiveVersion>2</archiveVersion>
-            <data>
-                <version>0</version>
-                <wantNonLocal>1</wantNonLocal>
-                <debug>0</debug>
-                <option>
-                    <name>OCDriverInfo</name>
-                    <state>1</state>
-                </option>
-                <option>
-                    <name>DoLogfile</name>
-                    <state>0</state>
-                </option>
-                <option>
-                    <name>LogFile</name>
-                    <state>$PROJ_DIR$\cspycomm.log</state>
-                </option>
-            </data>
-        </settings>
-        <settings>
             <name>PEMICRO_ID</name>
             <archiveVersion>2</archiveVersion>
             <data>
@@ -2475,7 +2414,7 @@
             <name>STLINK_ID</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>5</version>
+                <version>4</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -2484,7 +2423,7 @@
                 </option>
                 <option>
                     <name>CCSTLinkInterfaceRadio</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CCSTLinkInterfaceCmdLine</name>
@@ -2493,15 +2432,15 @@
                 <option>
                     <name>CCSTLinkResetList</name>
                     <version>3</version>
-                    <state>4</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CCCpuClockEdit</name>
-                    <state>64.0</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>CCSwoClockAuto</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CCSwoClockEdit</name>
@@ -2573,7 +2512,7 @@
                 </option>
                 <option>
                     <name>CCSTLinkJtagSpeedList</name>
-                    <version>1</version>
+                    <version>0</version>
                     <state>0</state>
                 </option>
                 <option>
@@ -2582,10 +2521,6 @@
                 </option>
                 <option>
                     <name>CCSTLinkDebugAccessPortRadio</name>
-                    <state>0</state>
-                </option>
-                <option>
-                    <name>CCSTLinkUseServerSelect</name>
                     <state>0</state>
                 </option>
             </data>
@@ -2690,7 +2625,7 @@
             <name>XDS100_ID</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>8</version>
+                <version>6</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -2833,7 +2768,7 @@
                 </option>
                 <option>
                     <name>CCXds100InterfaceRadio</name>
-                    <state>0</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>CCXds100InterfaceCmdLine</name>
@@ -2842,7 +2777,7 @@
                 <option>
                     <name>CCXds100ProbeList</name>
                     <version>0</version>
-                    <state>0</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>CCXds100SWOPortRadio</name>
@@ -2852,17 +2787,26 @@
                     <name>CCXds100SWOPort</name>
                     <state>1</state>
                 </option>
+            </data>
+        </settings>
+        <settings>
+            <name>NULINK_ID</name>
+            <archiveVersion>2</archiveVersion>
+            <data>
+                <version>0</version>
+                <wantNonLocal>1</wantNonLocal>
+                <debug>0</debug>
                 <option>
-                    <name>CCXDSTargetVccEnable</name>
+                    <name>OCDriverInfo</name>
+                    <state>1</state>
+                </option>
+                <option>
+                    <name>DoLogfile</name>
                     <state>0</state>
                 </option>
                 <option>
-                    <name>CCXDSTargetVoltage</name>
-                    <state>###Uninitialized###</state>
-                </option>
-                <option>
-                    <name>OCXDSDigitalStatesConfigFile</name>
-                    <state>1</state>
+                    <name>LogFile</name>
+                    <state>$PROJ_DIR$\cspycomm.log</state>
                 </option>
             </data>
         </settings>
@@ -2880,15 +2824,7 @@
                 <loadFlag>0</loadFlag>
             </plugin>
             <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\FreeRtos\FreeRtosArmPlugin.ENU.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
                 <file>$TOOLKIT_DIR$\plugins\rtos\Mbed\MbedArmPlugin.ENU.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\Mbed\MbedArmPlugin2.ENU.ewplugin</file>
                 <loadFlag>0</loadFlag>
             </plugin>
             <plugin>
@@ -2897,14 +2833,6 @@
             </plugin>
             <plugin>
                 <file>$TOOLKIT_DIR$\plugins\rtos\SafeRTOS\SafeRTOSPlugin.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\SMX\smxAwareIarArm8.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\SMX\smxAwareIarArm8BE.ewplugin</file>
                 <loadFlag>0</loadFlag>
             </plugin>
             <plugin>

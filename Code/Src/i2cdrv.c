@@ -77,7 +77,7 @@ static HAL_StatusTypeDef Internal_I2C_Get(I2C_HandleTypeDef *devI2C,UINT8 devAdd
     return mRst;
 }
 
-UINT8 CheckReady()
+UINT8 CheckReady(void)
 {
     /*  Before starting a new communication transfer, you need to check the current   
       state of the peripheral; if it’s busy you need to wait for the end of current

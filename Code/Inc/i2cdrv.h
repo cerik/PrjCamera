@@ -3,7 +3,7 @@
 #define _I2C_DRV_H_
 #include "datatype.h"
 
-UINT8 CheckReady();
+UINT8 CheckReady(void);
 
 UINT8 BQ24725_Get(UINT8 *buf,UINT8 len);
 UINT8 BQ24725_Set(UINT8 *buf,UINT8 len);

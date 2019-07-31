@@ -2,11 +2,11 @@
 <project>
     <fileVersion>3</fileVersion>
     <configuration>
-        <name>PrjCamera</name>
+        <name>Debug</name>
         <toolchain>
             <name>ARM</name>
         </toolchain>
-        <debug>0</debug>
+        <debug>1</debug>
         <settings>
             <name>C-STAT</name>
             <archiveVersion>261</archiveVersion>
@@ -1186,11 +1186,11 @@
         </settings>
     </configuration>
     <configuration>
-        <name>Debug</name>
+        <name>Release</name>
         <toolchain>
             <name>ARM</name>
         </toolchain>
-        <debug>1</debug>
+        <debug>0</debug>
         <settings>
             <name>C-STAT</name>
             <archiveVersion>261</archiveVersion>
@@ -1201,14 +1201,14 @@
                     <extraArgs></extraArgs>
                     <analyzeTimeoutEnabled>1</analyzeTimeoutEnabled>
                     <analyzeTimeout>600</analyzeTimeout>
-                    <enableParallel>1</enableParallel>
-                    <parallelThreads>2</parallelThreads>
+                    <enableParallel>0</enableParallel>
+                    <parallelThreads>4</parallelThreads>
                     <enableFalsePositives>0</enableFalsePositives>
                     <messagesLimitEnabled>1</messagesLimitEnabled>
                     <messagesLimit>100</messagesLimit>
                 </cstatargs>
                 <cstat_settings>
-                    <cstat_version>1.5.3</cstat_version>
+                    <cstat_version>1.5.0</cstat_version>
                     <checks_tree>
                         <package name="STDCHECKS" enabled="true">
                             <group enabled="true" name="ARR">
@@ -2297,7 +2297,7 @@
             <data>
                 <version>2</version>
                 <wantNonLocal>1</wantNonLocal>
-                <debug>1</debug>
+                <debug>0</debug>
                 <option>
                     <name>GenRtcDebugHeap</name>
                     <state>0</state>

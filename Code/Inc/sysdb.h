@@ -1,8 +1,12 @@
-﻿
+
 #ifndef _SYSDB_H_
 #define _SYSDB_H_
 
 #include "datatype.h"
+
+#ifdef __CC_ARM
+#pragma anon_unions
+#endif
 
 typedef enum {
     NONE=0
