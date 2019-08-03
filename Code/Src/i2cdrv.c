@@ -5,6 +5,10 @@
 #define I2C_ADDR_BQ24725  0x12
 #define I2C_ADDR_SYA1232  0x67 //0x77
 
+
+GetFunPtr gI2C_GetFun[2] = {BQ24725_Get,SYA1232_Get};
+SetFunptr gI2C_SetFun[2] = {BQ24725_Set,SYA1232_Set};
+
 #if 0
 static HAL_StatusTypeDef Internal_I2C_Set_DMA(I2C_HandleTypeDef *devI2C,UINT8 devAddr,UINT8 *buf,UINT8 len)
 {

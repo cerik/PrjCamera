@@ -27,6 +27,7 @@
 #include "sysdb.h"
 #include "cqueue.h"
 #include "bsp.h"
+#include "i2cdrv.h"
 #include "cmdProcess.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -99,7 +100,7 @@ void TaskCmdHandle(void const * argument)
 {
     osEvent mEvt;
     UINT8   mMsgBuf[16];
-    tHostReqMsg *mComMsgPtr;
+    tToDevMsg *mMsgPtr;
     
     InitCmdProcess();
     
@@ -116,20 +117,21 @@ void TaskCmdHandle(void const * argument)
         {
             if(BIT_1 == mEvt.value.signals )
             {
-                mComMsgPtr = (tHostReqMsg *)mMsgBuf;
+                mMsgPtr = (tToDevMsg *)mMsgBuf;
                 while(1)
                 {
-                    if((CQueueGetMsgSize(&gMsgQueue) < sizeof(tHostReqMsg)))
+                    if((CQueueGetMsgSize(&gMsgQueue) < sizeof(tToDevMsg)))
                     {
                         break;
                     }
                     
-                    if(mComMsgPtr->header == 0xAA55)
+                    if(mMsgPtr->mHeader == 0xAA55)
                     {
-                        CQueueGet(&gMsgQueue,mMsgBuf,sizeof(tHostReqMsg),TRUE);
-                        switch(mComMsgPtr->cmd)
+                        CQueueGet(&gMsgQueue,mMsgBuf,sizeof(tToDevMsg),TRUE);
+                        switch(mMsgPtr->mCmd)
                         {
                         case 1:
+                            //gI2C_SetFun[mMsgPtr->FromHost.mChip-1](mMsgBuf,2);
                             break;
                         }
                     }
@@ -140,6 +142,7 @@ void TaskCmdHandle(void const * argument)
                 }
             }
         }
+        printf("task1");
     }
     /* USER CODE END 5 */ 
 }
@@ -159,6 +162,7 @@ void TaskDBGather(void const * argument)
     {
         osDelay(1000);
         ToggleLED(1);
+        printf("task2");
 #ifdef IWDG_ENABLE
         HAL_IWDG_Refresh(&hiwdg);
 #endif

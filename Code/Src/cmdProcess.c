@@ -52,7 +52,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 {
   /* Set transmission flag: transfer complete */
     CQueuePut(&gMsgQueue,&lgComRxDat,1);
-    if(CQueueGetMsgSize(&gMsgQueue) >= sizeof(tHostReqMsg))
+    if(CQueueGetMsgSize(&gMsgQueue) >= sizeof(tToDevMsg))
     {
         SetComMsgEvent();
     }
