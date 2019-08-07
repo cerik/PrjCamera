@@ -156,6 +156,7 @@ void TaskCmdHandle(void const * argument)
 /* USER CODE END Header_TaskDBGather */
 void TaskDBGather(void const * argument)
 {
+    UINT8 buf[12];
     /* USER CODE BEGIN TaskDBGather */
     /* Infinite loop */
     for(;;)
@@ -163,6 +164,20 @@ void TaskDBGather(void const * argument)
         osDelay(1000);
         ToggleLED(1);
         printf("task2");
+        
+        BQ24725_Get(buf,0x01,1);
+        printf("BQ24725_reg:0x01=%X",buf[0]);
+        
+        BQ24725_Get(buf,0x02,1);
+        printf("BQ24725_reg:0x02=%X",buf[0]);
+        
+        
+        SYA1232_Get(buf,0x01,1);
+        printf("SYA1232_reg:0x02=%X",buf[0]);
+        
+        SYA1232_Get(buf,0x02,1);
+        printf("SYA1232_reg:0x02=%X",buf[0]);
+        
 #ifdef IWDG_ENABLE
         HAL_IWDG_Refresh(&hiwdg);
 #endif

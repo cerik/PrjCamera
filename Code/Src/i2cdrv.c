@@ -1,4 +1,4 @@
-
+#include <string.h>
 #include "main.h"
 #include "i2cdrv.h"
 
@@ -46,11 +46,14 @@ static HAL_StatusTypeDef Internal_I2C_Get_DMA(I2C_HandleTypeDef *devI2C,UINT8 de
 #endif
 
 
-static HAL_StatusTypeDef Internal_I2C_Set(I2C_HandleTypeDef *devI2C,UINT8 devAddr,UINT8 *buf,UINT8 len)
+static HAL_StatusTypeDef Internal_I2C_Set(I2C_HandleTypeDef *devI2C,UINT8 devAddr,UINT8 regAddr,UINT8 *buf,UINT8 len)
 {
+    UINT8 mBuf[12];
     HAL_StatusTypeDef mRst;
     
-    mRst = HAL_I2C_Master_Transmit(devI2C, (uint16_t)devAddr, (uint8_t*)buf, len, 10000);
+    mBuf[0] = regAddr;
+    memcpy(mBuf+1,buf,len);
+    mRst = HAL_I2C_Master_Transmit(devI2C, (uint16_t)devAddr, (uint8_t*)mBuf, len+1, 10000);
     if(mRst == HAL_OK)
     {
         /* Error_Handler() function is called when Timeout error occurs.
@@ -64,9 +67,10 @@ static HAL_StatusTypeDef Internal_I2C_Set(I2C_HandleTypeDef *devI2C,UINT8 devAdd
     return mRst;
 }
 
-static HAL_StatusTypeDef Internal_I2C_Get(I2C_HandleTypeDef *devI2C,UINT8 devAddr,UINT8 *buf,UINT8 len)
+static HAL_StatusTypeDef Internal_I2C_Get(I2C_HandleTypeDef *devI2C,UINT8 devAddr,UINT8 regAddr,UINT8 *buf,UINT8 len)
 {
     HAL_StatusTypeDef mRst;
+    mRst = HAL_I2C_Master_Transmit(devI2C, (uint16_t)devAddr, (uint8_t *)regAddr, 1, 10000);
     mRst = HAL_I2C_Master_Receive(devI2C, (uint16_t)devAddr, (uint8_t *)buf, len, 10000);
     if(mRst == HAL_OK)
     {
@@ -97,32 +101,36 @@ UINT8 CheckReady(void)
  */
 
 
-UINT8 BQ24725_Get(UINT8 *buf,UINT8 len)
+UINT8 BQ24725_Get(UINT8 *buf,UINT8 regAdr,UINT8 len)
 {
     HAL_StatusTypeDef mRst;
-    mRst = Internal_I2C_Get(&hi2c1,I2C_ADDR_BQ24725,buf,len);
+    mRst = Internal_I2C_Get(&hi2c1,I2C_ADDR_BQ24725,regAdr,buf,len);
     return mRst == HAL_OK?0:1;
 }
 
-UINT8 BQ24725_Set(UINT8 *buf,UINT8 len)
+UINT8 BQ24725_Set(UINT8 *buf,UINT8 regAdr,UINT8 len)
 {
     HAL_StatusTypeDef mRst;
-    mRst =  Internal_I2C_Set(&hi2c1,I2C_ADDR_BQ24725,buf,len);
+    mRst =  Internal_I2C_Set(&hi2c1,I2C_ADDR_BQ24725,regAdr,buf,len);
     return mRst == HAL_OK?0:1;
 }
 
-UINT8 SYA1232_Get(UINT8 *buf,UINT8 len)
+UINT8 SYA1232_Get(UINT8 *buf,UINT8 regAdr,UINT8 len)
 {
     HAL_StatusTypeDef mRst;
-    mRst = Internal_I2C_Get(&hi2c2,I2C_ADDR_SYA1232,buf,len);
+    mRst = Internal_I2C_Get(&hi2c2,I2C_ADDR_SYA1232,regAdr,buf,len);
     return mRst == HAL_OK?0:1;
 }
 
-UINT8 SYA1232_Set(UINT8 *buf,UINT8 len)
+UINT8 SYA1232_Set(UINT8 *buf,UINT8 regAdr,UINT8 len)
 {
     HAL_StatusTypeDef mRst;
-    mRst = Internal_I2C_Set(&hi2c2,I2C_ADDR_SYA1232,buf,len);
+    mRst = Internal_I2C_Set(&hi2c2,I2C_ADDR_SYA1232,regAdr,buf,len);
     return mRst == HAL_OK?0:1;
+}
+
+void SMBUS_ByteWrite(UINT8 *pBuffer,UINT8 wAddr,UINT8 numByteToRead)
+{
 }
 
 /**
