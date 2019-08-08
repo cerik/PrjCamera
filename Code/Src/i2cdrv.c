@@ -46,15 +46,12 @@ static HAL_StatusTypeDef Internal_I2C_Get_DMA(I2C_HandleTypeDef *devI2C,UINT8 de
 #endif
 
 
-static HAL_StatusTypeDef Internal_I2C_Set(I2C_HandleTypeDef *devI2C,UINT8 devAddr,UINT8 regAddr,UINT8 *buf,UINT8 len)
+static HAL_StatusTypeDef Internal_I2C_Set(I2C_HandleTypeDef *devI2C,UINT8 devAddr,UINT8 regAddr,UINT8 *pBuf,UINT8 len)
 {
-    UINT8 mBuf[12];
     HAL_StatusTypeDef mRst;
     
-    mBuf[0] = regAddr;
-    memcpy(mBuf+1,buf,len);
-    mRst = HAL_I2C_Master_Transmit(devI2C, (uint16_t)devAddr, (uint8_t*)mBuf, len+1, 10000);
-    if(mRst == HAL_OK)
+    mRst = HAL_I2C_Mem_Write(devI2C,(uint16_t)devAddr,regAddr,I2C_MEMADD_SIZE_8BIT,pBuf,len,1000);
+    if(mRst != HAL_OK)
     {
         /* Error_Handler() function is called when Timeout error occurs.
         When Acknowledge failure occurs (Slave don't acknowledge its address)
@@ -67,12 +64,11 @@ static HAL_StatusTypeDef Internal_I2C_Set(I2C_HandleTypeDef *devI2C,UINT8 devAdd
     return mRst;
 }
 
-static HAL_StatusTypeDef Internal_I2C_Get(I2C_HandleTypeDef *devI2C,UINT8 devAddr,UINT8 regAddr,UINT8 *buf,UINT8 len)
+static HAL_StatusTypeDef Internal_I2C_Get(I2C_HandleTypeDef *devI2C,UINT8 devAddr,UINT8 regAddr,UINT8 *pBuf,UINT8 len)
 {
     HAL_StatusTypeDef mRst;
-    mRst = HAL_I2C_Master_Transmit(devI2C, (uint16_t)devAddr, (uint8_t *)regAddr, 1, 10000);
-    mRst = HAL_I2C_Master_Receive(devI2C, (uint16_t)devAddr, (uint8_t *)buf, len, 10000);
-    if(mRst == HAL_OK)
+    mRst = HAL_I2C_Mem_Read(devI2C,devAddr,regAddr,I2C_MEMADD_SIZE_8BIT,pBuf,len,1000);
+    if(mRst != HAL_OK)
     {
         /* Error_Handler() function is called when Timeout error occurs.
         When Acknowledge failure occurs (Slave don't acknowledge it's address)
@@ -99,8 +95,6 @@ UINT8 CheckReady(void)
 /*******************************************************************************
  *     External Function;
  */
-
-
 UINT8 BQ24725_Get(UINT8 *buf,UINT8 regAdr,UINT8 len)
 {
     HAL_StatusTypeDef mRst;
