@@ -165,18 +165,19 @@ void TaskDBGather(void const * argument)
         ToggleLED(1);
         printf("task2");
         
-        BQ24725_Get(buf,0x01,1);
-        printf("BQ24725_reg:0x01=%X",buf[0]);
+        memset(buf,0,8);
+        BQ24725_Get(buf,0xFE,2);
+        printf("BQ24725_reg:0xFE=%02X,%02X",buf[0],buf[1]);
         
-        BQ24725_Get(buf,0x02,1);
-        printf("BQ24725_reg:0x02=%X",buf[0]);
+        BQ24725_Get(buf+2,0xFF,2);
+        printf("BQ24725_reg:0xFD=%02X,%02X",buf[2],buf[3]);
         
         
-        SYA1232_Get(buf,0x01,1);
-        printf("SYA1232_reg:0x02=%X",buf[0]);
+        //SYA1232_Get(buf,0x01,1);
+        //printf("SYA1232_reg:0x02=%X",buf[0]);
         
-        SYA1232_Get(buf,0x02,1);
-        printf("SYA1232_reg:0x02=%X",buf[0]);
+        //SYA1232_Get(buf,0x02,1);
+        //printf("SYA1232_reg:0x02=%X",buf[0]);
         
 #ifdef IWDG_ENABLE
         HAL_IWDG_Refresh(&hiwdg);
