@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
+#include <string.h>
 #include "FreeRTOS.h"
 #include "cmsis_os.h"
 #include "task.h"
@@ -156,29 +157,51 @@ void TaskCmdHandle(void const * argument)
 /* USER CODE END Header_TaskDBGather */
 void TaskDBGather(void const * argument)
 {
-    UINT8 buf[12];
+    UINT8 buf[12],i;
     /* USER CODE BEGIN TaskDBGather */
     /* Infinite loop */
+    osDelay(1000);
     for(;;)
     {
-        osDelay(1000);
         ToggleLED(1);
-        printf("task2");
+        printf("task2\n");
         
-        memset(buf,0,8);
-        BQ24725_Get(buf,0xFE,2);
-        printf("BQ24725_reg:0xFE=%02X,%02X",buf[0],buf[1]);
+        memset(buf,0,10);
+        //BQ24725_Get(buf,0xFE,2);
+        //printf("BQ24725_reg:0xFE=%02X,%02X",buf[0],buf[1]);
         
-        BQ24725_Get(buf+2,0xFF,2);
-        printf("BQ24725_reg:0xFD=%02X,%02X",buf[2],buf[3]);
+        //BQ24725_Get(buf+2,0xFF,2);
+        //printf("BQ24725_reg:0xFD=%02X,%02X",buf[2],buf[3]);
         
+        if( SYA1232_Get(buf,0x09,10) )
+        {
+            printf("Read Fail, Please reset I2C.\n");
+        }
+        else
+        {
+            printf("******REG 0x09:\n");
+            for(i=0;i<10;i++)
+            {
+                printf("%02X ",buf[i]);
+            }
+            printf("\n");
+        }
+        osDelay(1000);
         
-        //SYA1232_Get(buf,0x01,1);
-        //printf("SYA1232_reg:0x02=%X",buf[0]);
-        
-        //SYA1232_Get(buf,0x02,1);
-        //printf("SYA1232_reg:0x02=%X",buf[0]);
-        
+        if(SYA1232_Get(buf,0x00,4))
+        {
+            printf("Read Fail, Please reset I2C.\n");
+        }
+        else
+        {
+            printf("******REG 0x00:\n");
+            for(i=0;i<4;i++)
+            {
+                printf("%02X ",buf[i]);
+            }
+            printf("\n");
+        }
+        osDelay(1000);
 #ifdef IWDG_ENABLE
         HAL_IWDG_Refresh(&hiwdg);
 #endif

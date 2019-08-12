@@ -3,7 +3,7 @@
 #include "i2cdrv.h"
 
 #define I2C_ADDR_BQ24725  0x12
-#define I2C_ADDR_SYA1232  0x67 //0x77
+#define I2C_ADDR_SYA1232  0xCE
 
 
 GetFunPtr gI2C_GetFun[2] = {BQ24725_Get,SYA1232_Get};
