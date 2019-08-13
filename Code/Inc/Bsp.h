@@ -20,6 +20,7 @@ UINT8 GetACOK(void);
 void  SetLED(UINT8 Channel,UINT8 Enable);
 void  ToggleLED(UINT8 channel);
 void  StartAdc(void);
+void  StartTim(void);
 
 void ProcessADCData(void);
 

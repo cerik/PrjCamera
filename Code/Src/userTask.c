@@ -108,9 +108,16 @@ void TaskCmdHandle(void const * argument)
     /* USER CODE BEGIN 5 */
     StartAdc();
     
+    StartTim();
+    
     /* Infinite loop */
     StartComRxInterrupt();
     /* Infinite loop */
+    
+    ProcessADCData();
+    
+    printf("ACOK:%d \r\n\r\n", GetACOK());
+    
     for(;;)
     {
         mEvt = osSignalWait( BIT_1, 1000);
@@ -143,7 +150,7 @@ void TaskCmdHandle(void const * argument)
                 }
             }
         }
-        printf("task1");
+        //printf("task1 \r\n");
     }
     /* USER CODE END 5 */ 
 }
@@ -164,7 +171,7 @@ void TaskDBGather(void const * argument)
     for(;;)
     {
         ToggleLED(1);
-        printf("task2\n");
+        //printf("task2\n");
         
         memset(buf,0,10);
         //BQ24725_Get(buf,0xFE,2);
@@ -173,6 +180,7 @@ void TaskDBGather(void const * argument)
         //BQ24725_Get(buf+2,0xFF,2);
         //printf("BQ24725_reg:0xFD=%02X,%02X",buf[2],buf[3]);
         
+        /*
         if( SYA1232_Get(buf,0x09,10) )
         {
             printf("Read Fail, Please reset I2C.\n");
@@ -201,6 +209,7 @@ void TaskDBGather(void const * argument)
             }
             printf("\n");
         }
+        */
         osDelay(1000);
 #ifdef IWDG_ENABLE
         HAL_IWDG_Refresh(&hiwdg);

@@ -90,6 +90,7 @@ void StartAdc(void)
     }
   
     /* Run the ADC calibration */  
+    
     if (HAL_ADCEx_Calibration_Start(&hadc1) != HAL_OK)
     {
         /* Calibration Error */
@@ -107,6 +108,25 @@ void StartAdc(void)
     HAL_ADC_Start(&hadc1);
 }
 
+void StartTim(void)
+{
+    if (HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_2) != HAL_OK)
+    {
+        /* Start Error */
+        Error_Handler();
+    }
+    if (HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_1) != HAL_OK)
+    {
+        /* Start Error */
+        Error_Handler();
+    }
+    if (HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_2) != HAL_OK)
+    {
+        /* Start Error */
+        Error_Handler();
+    }
+}
+
 BOOL SendComMsg(UINT8 *pBuffer,UINT16 len)
 {
     HAL_StatusTypeDef rst;
@@ -117,6 +137,13 @@ BOOL SendComMsg(UINT8 *pBuffer,UINT16 len)
 
 void ProcessADCData(void)
 {
+    UINT8 i;
+    printf("\r\n");
+    for (i=0; i<10; i++) {
+        //(float) aADCxConvertedValues[i] * 3.3 / 4095;
+        printf("ADC1_CH%d£º%d\r\n", i, aADCxConvertedValues[i]);
+    }
+    printf("\r\n");
 }
 
 //--------------------------------------------------------------------
@@ -158,5 +185,26 @@ void HAL_ADC_ErrorCallback(ADC_HandleTypeDef *hadc)
 {
     /* In case of ADC error, call main error handler */
     Error_Handler();
+}
+
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+{
+    uint32_t uwDiffCapture;
+ 
+    if ((htim->Instance == TIM2) && (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2))
+    {
+        uwDiffCapture = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
+        printf("TIM2_CH2:%d \r\n", uwDiffCapture);
+    }
+    else if ((htim->Instance == TIM3) && (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1))
+    {
+        uwDiffCapture = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
+        printf("TIM3_CH1:%d \r\n", uwDiffCapture);
+    }
+    else if ((htim->Instance == TIM3) && (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2))
+    {
+        uwDiffCapture = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
+        printf("TIM3_CH2:%d \r\n", uwDiffCapture);
+    }
 }
 
