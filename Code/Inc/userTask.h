@@ -3,8 +3,6 @@
 
 void CreateUserTask(void);
 
-void SetComMsgEvent(void);
-
 void TaskCmdHandle(void const * argument);
 void TaskDBGather(void const * argument);
 

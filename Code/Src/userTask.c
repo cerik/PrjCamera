@@ -30,6 +30,7 @@
 #include "bsp.h"
 #include "i2cdrv.h"
 #include "cmdProcess.h"
+#include "flash.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */     
@@ -167,7 +168,19 @@ void TaskDBGather(void const * argument)
     UINT8 buf[12],i;
     /* USER CODE BEGIN TaskDBGather */
     /* Infinite loop */
+    
+    //Ð´flash
+    UINT8 src[]={0x05};
+    UINT32 size = sizeof(src);
+    UINT8 buff[size];
+    Flash_Write(src, DEST_ADDR, size);
+    
     osDelay(1000);
+    
+    //¶Áflash
+    Flash_Read(buff, DEST_ADDR, size);
+    printf("buff:%04x", buff[0]);
+    
     for(;;)
     {
         ToggleLED(1);
@@ -217,6 +230,7 @@ void TaskDBGather(void const * argument)
     }
     /* USER CODE END TaskDBGather */
 }
+
 /* USER CODE END Application */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
