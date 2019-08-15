@@ -23,6 +23,8 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "userTask.h"
+#include "sysdb.h"
+#include "UsartDriver.h"
       
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -59,6 +61,8 @@ TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 
 UART_HandleTypeDef huart1;
+
+DMA_HandleTypeDef hdma_usart1_tx;
 
 #ifdef IWDG_ENABLE
 IWDG_HandleTypeDef hiwdg;
@@ -120,6 +124,17 @@ PUTCHAR_PROTOTYPE
 #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
 #endif /* __GNUC__ */
 /* USER CODE END 0 */
+
+
+void _Error_Handler(char *file, int line)
+{
+
+  while(1)
+  {
+  }
+
+}
+
 
 /**
   * @brief  The application entry point.

@@ -452,6 +452,16 @@
               <FileType>1</FileType>
               <FilePath>..\Src\flash.c</FilePath>
             </File>
+            <File>
+              <FileName>LoopQueue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\LoopQueue.c</FilePath>
+            </File>
+            <File>
+              <FileName>UsartDriver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\UsartDriver.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

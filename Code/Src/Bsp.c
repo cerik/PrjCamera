@@ -90,7 +90,6 @@ void StartAdc(void)
     }
   
     /* Run the ADC calibration */  
-    
     if (HAL_ADCEx_Calibration_Start(&hadc1) != HAL_OK)
     {
         /* Calibration Error */

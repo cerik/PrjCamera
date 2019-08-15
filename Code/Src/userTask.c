@@ -31,6 +31,8 @@
 #include "i2cdrv.h"
 #include "cmdProcess.h"
 #include "flash.h"
+#include "sysdb.h"
+#include "UsartDriver.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */     
@@ -79,6 +81,33 @@ void SetComMsgEvent(void)
     osSignalSet( TaskCmdHandleNaHandle, BIT_1);
 }
 
+static void initUsartIT(UART_HandleTypeDef *huart)
+{
+    huart->ErrorCode = HAL_UART_ERROR_NONE;
+    huart->RxState = HAL_UART_STATE_BUSY_RX;
+    /* Process Unlocked */
+    __HAL_UNLOCK(huart);
+
+    /* Enable the UART Parity Error Interrupt */
+    __HAL_UART_ENABLE_IT(huart, UART_IT_PE);
+
+    /* Enable the UART Error Interrupt: (Frame error, noise error, overrun error) */
+    __HAL_UART_ENABLE_IT(huart, UART_IT_ERR);
+
+    /* Enable the UART Data Register not empty Interrupt */
+    __HAL_UART_ENABLE_IT(huart, UART_IT_RXNE);
+    
+}
+
+static void init_system(void)
+{
+	initUsartBuff(USART1_ID);
+	initUsartIT(&huart1);
+	//write(USART1_ID, "USART1 ENBALE\n", sizeof("USART1 ENBALE\n")/sizeof(char));
+}
+/* function code end */
+
+
 void CreateUserTask(void)
 {
     /* Create the thread(s) */
@@ -89,6 +118,16 @@ void CreateUserTask(void)
     /* definition and creation of TaskDBGatherNam */
     osThreadDef(TaskDBGatherNam, TaskDBGather, osPriorityIdle, 0, 64);
     TaskDBGatherNamHandle = osThreadCreate(osThread(TaskDBGatherNam), NULL);
+    
+    
+    init_system();
+    
+    osThreadDef(UART1RXTask, usart1_receive_task, osPriorityRealtime, 0, 512);
+    osThreadCreate(osThread(UART1RXTask), NULL);
+    
+    osThreadDef(UART1TXTask, usart1_send_task, osPriorityBelowNormal, 0, 256);
+    osThreadCreate(osThread(UART1TXTask), NULL);    
+    
 }
 
 /* USER CODE BEGIN Header_TaskCmdHandle */
@@ -230,7 +269,6 @@ void TaskDBGather(void const * argument)
     }
     /* USER CODE END TaskDBGather */
 }
-
 /* USER CODE END Application */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

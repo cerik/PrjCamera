@@ -3,7 +3,7 @@
 
 #include "main.h"
  
-#define DEST_ADDR 0x08007000
+#define DEST_ADDR 0x08008000
 
 typedef enum
 {
