@@ -1,8 +1,8 @@
 
 #include "UsartDriver.h"
 
-#define USART1_REC_MAX    512
-#define USART1_SEND_MAX   512
+#define USART1_REC_MAX    256
+#define USART1_SEND_MAX   256
 #define USART2_REC_MAX    526
 #define USART2_SEND_MAX   526
 #define USART3_REC_MAX    526

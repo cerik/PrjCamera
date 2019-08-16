@@ -119,7 +119,6 @@ void CreateUserTask(void)
     //osThreadDef(TaskDBGatherNam, TaskDBGather, osPriorityIdle, 0, 64);
     //TaskDBGatherNamHandle = osThreadCreate(osThread(TaskDBGatherNam), NULL);
     
-    
     init_system();
     
     osThreadDef(UART1RXTask, usart1_receive_task, osPriorityRealtime, 0, 512);
