@@ -112,12 +112,12 @@ void CreateUserTask(void)
 {
     /* Create the thread(s) */
     /* definition and creation of TaskCmdHandleNa */
-    osThreadDef(TaskCmdHandleNa, TaskCmdHandle, osPriorityNormal, 0, 64);
-    TaskCmdHandleNaHandle = osThreadCreate(osThread(TaskCmdHandleNa), NULL);
+    //osThreadDef(TaskCmdHandleNa, TaskCmdHandle, osPriorityNormal, 0, 64);
+    //TaskCmdHandleNaHandle = osThreadCreate(osThread(TaskCmdHandleNa), NULL);
 
     /* definition and creation of TaskDBGatherNam */
-    osThreadDef(TaskDBGatherNam, TaskDBGather, osPriorityIdle, 0, 64);
-    TaskDBGatherNamHandle = osThreadCreate(osThread(TaskDBGatherNam), NULL);
+    //osThreadDef(TaskDBGatherNam, TaskDBGather, osPriorityIdle, 0, 64);
+    //TaskDBGatherNamHandle = osThreadCreate(osThread(TaskDBGatherNam), NULL);
     
     
     init_system();
@@ -208,17 +208,7 @@ void TaskDBGather(void const * argument)
     /* USER CODE BEGIN TaskDBGather */
     /* Infinite loop */
     
-    //Ð´flash
-    UINT8 src[]={0x05};
-    UINT32 size = sizeof(src);
-    UINT8 buff[size];
-    Flash_Write(src, DEST_ADDR, size);
-    
     osDelay(1000);
-    
-    //¶Áflash
-    Flash_Read(buff, DEST_ADDR, size);
-    printf("buff:%04x", buff[0]);
     
     for(;;)
     {

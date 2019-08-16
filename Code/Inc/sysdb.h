@@ -11,6 +11,9 @@
 #pragma anon_unions
 #endif
 
+#define CHIP_BQ24725 0x01
+#define CHIP_SYA1232 0x02
+
 typedef enum {
     NONE=0
 }tPtcDatType;
@@ -38,6 +41,13 @@ typedef struct{
     UINT16  crc;
 }tToHostMsg;
 
+typedef struct{
+    UINT8  mChip;
+    UINT8  mCmd;
+    UINT8  mLen;
+    UINT8  mValue[6];
+}STRUCT_FLASH;
+
 #pragma pack()
 
 typedef struct{
@@ -53,6 +63,8 @@ void usart1_receive_task(void const* arg);
 void usart1_send_task(void const* arg);
 	
 void app_run(void);   /* 所有任务初始化 */
+
+void startFlashHandle(void);
 		
 extern IWDG_HandleTypeDef hiwdg;
 extern UART_HandleTypeDef huart1;
