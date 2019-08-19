@@ -179,7 +179,7 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  startFlashHandle();
+  BQ24725_Flash_Already();
 
   /* USER CODE END 2 */
 

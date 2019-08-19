@@ -64,7 +64,9 @@ void usart1_send_task(void const* arg);
 	
 void app_run(void);   /* 所有任务初始化 */
 
-void startFlashHandle(void);
+void BQ24725_Flash_Already(void);
+void BQ24725_Flash_Save(char *StrBuf);
+void SYA1232_Flash_Save(void);
 		
 extern IWDG_HandleTypeDef hiwdg;
 extern UART_HandleTypeDef huart1;
