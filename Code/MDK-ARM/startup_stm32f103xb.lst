@@ -497,11 +497,11 @@ ARM Macro Assembler    Page 8
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
 ork --depend=prjcamera\startup_stm32f103xb.d -oprjcamera\startup_stm32f103xb.o 
--I..\\Inc -I.\RTE\_PrjCamera -ID:\Users\BruceWu\AppData\Local\Arm\Packs\ARM\CMS
-IS\5.5.1\CMSIS\Core\Include -ID:\Users\BruceWu\AppData\Local\Arm\Packs\Keil\STM
-32F1xx_DFP\2.3.0\Device\Include --predefine="__MICROLIB SETA 1" --predefine="__
-UVISION_VERSION SETA 528" --predefine="_RTE_ SETA 1" --predefine="STM32F10X_MD 
-SETA 1" --list=startup_stm32f103xb.lst startup_stm32f103xb.s
+-I..\\Inc -I.\RTE\_PrjCamera -ID:\Soft\Keil_v5\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\
+Core\Include -ID:\Soft\Keil_v5\Arm\Packs\Keil\STM32F1xx_DFP\2.3.0\Device\Includ
+e --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 528" --pr
+edefine="_RTE_ SETA 1" --predefine="STM32F10X_MD SETA 1" --list=startup_stm32f1
+03xb.lst startup_stm32f103xb.s
 
 
 

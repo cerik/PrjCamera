@@ -6,7 +6,8 @@
 #include "flash.h"
 #include "bsp.h"
 
-#define flash_len 20
+#define flash_len 36
+#define value_len 6
 
 tSysDB  g_SysDB = { 0 };
 unsigned int f_len = 0;
@@ -47,7 +48,7 @@ void usart1_receive_task(void const* arg)
     unsigned int data_len = 0;
     unsigned int i = 0;
     char data = 0;
-    UINT8 buf[6] = {0};
+    UINT8 buf[value_len] = {0};
     char StrBuf[10] = {0};
     char tmp[10];
     int j = 0;
@@ -87,7 +88,7 @@ void usart1_receive_task(void const* arg)
             else if (StrBuf[1] == 0x57) //Write
             {
                 int index = f_len;
-                for(int j=0; j<sizeof(StructFlash); ++j) {
+                for(int j=0; j<f_len; ++j) {
                     if(StructFlash[j].mChip == CHIP_BQ24725 && StructFlash[j].mCmd == StrBuf[0]) {
                         index = j;
                     }
@@ -131,6 +132,15 @@ void usart1_send_task(void const* arg)
         ToggleLED(1);
         
         osDelay(1000);
+        /*
+        for (int i=0; i<f_len; i++) {
+            printf("StructFlash: 0x%02x = ", StructFlash[i].mCmd);
+            for(int j=0; j<StructFlash[i].mLen; j++) {
+               printf("0x%02x ", StructFlash[i].mValue[j]);
+            }
+            printf("\r\n\r\n");
+        }
+        */
         
         while(huart1.gState == HAL_UART_STATE_BUSY_TX && xTaskGetTickCount() - old_time <= 3);
         
@@ -164,26 +174,40 @@ void usart1_send_task(void const* arg)
 
 void startFlashHandle(void)
 {
+    /*
+    HAL_FLASH_Unlock();
+    Flash_Erase(DEST_ADDR);
+    HAL_FLASH_Lock();
+    */
     UINT8 flashBuff[flash_len];
     
     Flash_Read(flashBuff, DEST_ADDR, sizeof(flashBuff));
     
+    if(flashBuff[0] != 0x01 && flashBuff[0] != 0x02) {
+        return ;
+    }
+    
     for(int i=0; i<flash_len; i+=sizeof(STRUCT_FLASH)) {
-        
-        UINT8 buf[6];
-        for(int j=0; j<6; j++) {
-            buf[j] = flashBuff[i+j+3];
+        if(flashBuff[i] == 0x01 || flashBuff[i] == 0x02) {
+            UINT8 buf[value_len];
+            for(int j=0; j<value_len; j++) {
+                buf[j] = flashBuff[i+j+3];
+                StructFlash[f_len].mValue[j] = buf[j];
+            }
+            
+            if(flashBuff[i] == 0x01) {
+               BQ24725_Set(buf, flashBuff[i+1], flashBuff[i+2]);
+                
+               StructFlash[f_len].mChip = CHIP_BQ24725;
+            } else if (flashBuff[i] == 0x02) {
+                SYA1232_Set(buf, flashBuff[i+1], flashBuff[i+2]);
+                StructFlash[f_len].mChip = CHIP_SYA1232;
+            }
+            
+            StructFlash[f_len].mCmd = flashBuff[i+1];
+            StructFlash[f_len].mLen = flashBuff[i+2];
+            f_len += 1;
         }
-        
-        if(flashBuff[i] == 0x01) {
-           BQ24725_Set(buf, flashBuff[i+1], flashBuff[i+2]); 
-        } else if (flashBuff[i] == 0x02) {
-            SYA1232_Set(buf, flashBuff[i+1], flashBuff[i+2]);
-        }
-        
-        //printf("sFlash.mChip:0x%02x \r\n", flashBuff[i]);
-        //printf("sFlash.mCmd:0x%02x \r\n", flashBuff[i+1]);
-        //printf("sFlash.mValue:0x%02x \r\n\r\n", flashBuff[i+3]);
     }
     
 }
