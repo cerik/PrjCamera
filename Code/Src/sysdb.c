@@ -13,6 +13,13 @@ tSysDB  g_SysDB = { 0 };
 unsigned int f_len = 0;
 STRUCT_FLASH StructFlash[flash_len];
 
+unsigned char BQ24725_Config[4][3] = {
+	{0x12, 0x12, 0x9D}, 
+	{0x14, 0x00, 0x08}, 
+	{0x15, 0x00, 0x10}, 
+	{0x3F, 0x00, 0x10}
+};
+
 static void restart_usart(UART_HandleTypeDef *huart)
 {
     if(huart == 0)
@@ -158,24 +165,33 @@ void BQ24725_Flash_Already(void)
     
     Flash_Read(flashBuff, DEST_ADDR, sizeof(flashBuff));
     
-    if(flashBuff[0] != CHIP_BQ24725) {
-        return ;
-    }
-    
-    for(int i=0; i<flash_len; i+=sizeof(STRUCT_FLASH)) {
-        if(flashBuff[i] == CHIP_BQ24725) {
-            UINT8 buf[value_len];
-            for(int j=0; j<value_len; j++) {
-                buf[j] = flashBuff[i+j+3];
-                StructFlash[f_len].mValue[j] = buf[j];
+    if(flashBuff[0] == CHIP_BQ24725)
+    {
+        for(int i=0; i<flash_len; i+=sizeof(STRUCT_FLASH)) {
+            if(flashBuff[i] == CHIP_BQ24725) {
+                UINT8 buf[value_len];
+                for(int j=0; j<value_len; j++) {
+                    buf[j] = flashBuff[i+j+3];
+                    StructFlash[f_len].mValue[j] = buf[j];
+                }
+                
+                BQ24725_Set(buf, flashBuff[i+1], flashBuff[i+2]);
+                
+                StructFlash[f_len].mChip = CHIP_BQ24725;
+                StructFlash[f_len].mCmd = flashBuff[i+1];
+                StructFlash[f_len].mLen = flashBuff[i+2];
+                f_len += 1;
             }
-            
-            BQ24725_Set(buf, flashBuff[i+1], flashBuff[i+2]);
-            
-            StructFlash[f_len].mChip = CHIP_BQ24725;
-            StructFlash[f_len].mCmd = flashBuff[i+1];
-            StructFlash[f_len].mLen = flashBuff[i+2];
-            f_len += 1;
+        }
+    }
+    else 
+    {
+        for (int i = 0; i < 4; i ++) {
+            UINT8 buf[2];
+            for (int j = 0; j < 2; j ++) {
+                buf[j] = BQ24725_Config[i][j+1];
+            }
+            BQ24725_Set(buf, BQ24725_Config[i][0], 2);
         }
     }
     
@@ -207,11 +223,9 @@ void BQ24725_Flash_Save(char *StrBuf) {
 }
 
 void SYA1232_Flash_Save(void) {
-    osDelay(100);
     UINT8 fbBuf[12] = {0X00,0X00};
     UINT8 ffBuf[12] = {0X00};
     SYA1232_Set(fbBuf,0xBF,2);
-    osDelay(100);
     SYA1232_Set(ffBuf,0xB5,1);
 }
 /* function code end */
