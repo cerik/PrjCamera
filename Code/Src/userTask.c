@@ -101,9 +101,9 @@ static void initUsartIT(UART_HandleTypeDef *huart)
 
 static void init_system(void)
 {
-	initUsartBuff(USART1_ID);
-	initUsartIT(&huart1);
-	//write(USART1_ID, "USART1 ENBALE\n", sizeof("USART1 ENBALE\n")/sizeof(char));
+    initUsartBuff(USART1_ID);
+    initUsartIT(&huart1);
+    //write(USART1_ID, "USART1 ENBALE\n", sizeof("USART1 ENBALE\n")/sizeof(char));
 }
 /* function code end */
 
@@ -155,7 +155,7 @@ void TaskCmdHandle(void const * argument)
     
     ProcessADCData();
     
-    printf("ACOK:%d \r\n\r\n", GetACOK());
+    //printf("ACOK:%d \r\n\r\n", GetACOK());
     
     for(;;)
     {
@@ -206,6 +206,7 @@ void TaskDBGather(void const * argument)
     UINT8 buf[12],i;
     /* USER CODE BEGIN TaskDBGather */
     /* Infinite loop */
+
     
     osDelay(1000);
     
