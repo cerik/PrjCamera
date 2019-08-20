@@ -7,7 +7,7 @@
 #include "bsp.h"
 
 #define flash_len 36
-#define value_len 6
+#define value_len 20
 
 tSysDB  g_SysDB = { 0 };
 unsigned int f_len = 0;
@@ -55,9 +55,10 @@ void usart1_receive_task(void const* arg)
     unsigned int data_len = 0;
     unsigned int i = 0;
     char data = 0;
+
     UINT8 buf[value_len] = {0};
-    char StrBuf[10] = {0};
-    char tmp[10];
+    char StrBuf[value_len] = {0};
+    char tmp[value_len];
     int j = 0;
 
     while(1)
@@ -82,26 +83,52 @@ void usart1_receive_task(void const* arg)
                 #endif
             }
             
-            if(StrBuf[1] == 0x52) //Read
+            if(StrBuf[0] == 0x01) 
             {
-                BQ24725_Get(buf, StrBuf[0], StrBuf[2]);
-                tmp[0] = StrBuf[0];
-                for(j = 0; j < StrBuf[2]; j++)
+                if(StrBuf[2] == 0x52) //Read
                 {
-                    tmp[j + 1] = buf[j];
+                    SYA1232_Get(buf, StrBuf[1], StrBuf[3]);
+                    tmp[0] = StrBuf[0];
+                    tmp[1] = StrBuf[1];
+                    for(j = 0; j < StrBuf[3]; j++)
+                    {
+                        tmp[j + 2] = buf[j];
+                    }
+                    write(USART1_ID, (char*)tmp, StrBuf[3] + 2);
+                    
+                } 
+                else if (StrBuf[2] == 0x57) //Write
+                {
+                    for(i = 0; i < StrBuf[3]; i++)
+                    {
+                        buf[i] = StrBuf[ 4 + i ];
+                    }
+                    SYA1232_Set(buf, StrBuf[1], StrBuf[3]);
                 }
-                write(USART1_ID, (char*)tmp, StrBuf[2] + 1);
-            } 
-            else if (StrBuf[1] == 0x57) //Write
+            }
+            else if(StrBuf[0] == 0x02)
             {
-                for(i = 0; i < StrBuf[2]; i++)
+                
+                if(StrBuf[2] == 0x52) //Read
                 {
-                    buf[i] = StrBuf[ 3 + i ];
+                    BQ24725_Get(buf, StrBuf[1], StrBuf[3]);
+                    tmp[0] = StrBuf[0];
+                    tmp[1] = StrBuf[1];
+                    for(j = 0; j < StrBuf[3]; j++)
+                    {
+                        tmp[j + 2] = buf[j];
+                    }
+                    write(USART1_ID, (char*)tmp, StrBuf[3] + 2);
+                } 
+                else if (StrBuf[2] == 0x57) //Write
+                {
+                    for(i = 0; i < StrBuf[3]; i++)
+                    {
+                        buf[i] = StrBuf[ 4 + i ];
+                    }
+                    BQ24725_Set(buf, StrBuf[1], StrBuf[3]);
+                    BQ24725_Flash_Save(StrBuf);
                 }
-                
-                BQ24725_Set(buf, StrBuf[0], StrBuf[2]);
-                
-                BQ24725_Flash_Save(StrBuf);
             }
         }
     }
