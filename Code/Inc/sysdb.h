@@ -15,7 +15,7 @@
 #define CHIP_SYA1232 0x02
 
 typedef enum {
-    NONE=0
+    NONE = 0
 }tPtcDatType;
 
 #pragma pack(1)
@@ -61,13 +61,14 @@ extern tSysDB  g_SysDB;
 #define DEBUG 0   /* 选择打开Debug调试模式  串口接收数据->将数据返回 */
 void usart1_receive_task(void const* arg);
 void usart1_send_task(void const* arg);
-	
+
 void app_run(void);   /* 所有任务初始化 */
+
 
 void BQ24725_Flash_Already(void);
 void BQ24725_Flash_Save(char *StrBuf);
 void SYA1232_Flash_Save(void);
-		
+
 extern IWDG_HandleTypeDef hiwdg;
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;

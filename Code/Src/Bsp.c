@@ -140,9 +140,9 @@ void ProcessADCData(void)
     printf("\r\n");
     for (i=0; i<10; i++) {
         //(float) aADCxConvertedValues[i] * 3.3 / 4095;
-        printf("ADC1_CH%d£º%d\r\n", i, aADCxConvertedValues[i]);
+//        printf("ADC1_CH%d£º%d\r\n", i, aADCxConvertedValues[i]);
     }
-    printf("\r\n");
+//    printf("\r\n");
 }
 
 //--------------------------------------------------------------------
@@ -193,17 +193,17 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
     if ((htim->Instance == TIM2) && (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2))
     {
         uwDiffCapture = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
-        printf("TIM2_CH2:%d \r\n", uwDiffCapture);
+//        printf("TIM2_CH2:%d \r\n", uwDiffCapture);
     }
     else if ((htim->Instance == TIM3) && (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1))
     {
         uwDiffCapture = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
-        printf("TIM3_CH1:%d \r\n", uwDiffCapture);
+//        printf("TIM3_CH1:%d \r\n", uwDiffCapture);
     }
     else if ((htim->Instance == TIM3) && (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2))
     {
         uwDiffCapture = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
-        printf("TIM3_CH2:%d \r\n", uwDiffCapture);
+//        printf("TIM3_CH2:%d \r\n", uwDiffCapture);
     }
 }
 
