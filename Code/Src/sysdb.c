@@ -6,7 +6,7 @@
 #include "flash.h"
 #include "bsp.h"
 
-#define flash_len 36
+#define flash_len 20
 #define value_len 20
 
 tSysDB  g_SysDB = { 0 };
@@ -83,7 +83,7 @@ void usart1_receive_task(void const* arg)
                 #endif
             }
             
-            if(StrBuf[0] == 0x01) 
+            if(StrBuf[0] == CHIP_SYA1232) 
             {
                 if(StrBuf[2] == 0x52) //Read
                 {
@@ -106,7 +106,7 @@ void usart1_receive_task(void const* arg)
                     SYA1232_Set(buf, StrBuf[1], StrBuf[3]);
                 }
             }
-            else if(StrBuf[0] == 0x02)
+            else if(StrBuf[0] == CHIP_BQ24725)
             {
                 
                 if(StrBuf[2] == 0x52) //Read
@@ -196,13 +196,13 @@ void BQ24725_Flash_Already(void)
     {
         for(int i=0; i<flash_len; i+=sizeof(STRUCT_FLASH)) {
             if(flashBuff[i] == CHIP_BQ24725) {
-                UINT8 buf[value_len];
-                for(int j=0; j<value_len; j++) {
-                    buf[j] = flashBuff[i+j+3];
-                    StructFlash[f_len].mValue[j] = buf[j];
+                UINT8 bBuf[2];
+                for(int j=0; j<2; j++) {
+                    bBuf[j] = flashBuff[i+j+3];
+                    StructFlash[f_len].mValue[j] = bBuf[j];
                 }
                 
-                BQ24725_Set(buf, flashBuff[i+1], flashBuff[i+2]);
+                BQ24725_Set(bBuf, flashBuff[i+1], flashBuff[i+2]);
                 
                 StructFlash[f_len].mChip = CHIP_BQ24725;
                 StructFlash[f_len].mCmd = flashBuff[i+1];
@@ -214,11 +214,11 @@ void BQ24725_Flash_Already(void)
     else 
     {
         for (int i = 0; i < 4; i ++) {
-            UINT8 buf[2];
+            UINT8 sBuf[2];
             for (int j = 0; j < 2; j ++) {
-                buf[j] = BQ24725_Config[i][j+1];
+                sBuf[j] = BQ24725_Config[i][j+1];
             }
-            BQ24725_Set(buf, BQ24725_Config[i][0], 2);
+            BQ24725_Set(sBuf, BQ24725_Config[i][0], 2);
         }
     }
     
@@ -228,19 +228,19 @@ void BQ24725_Flash_Save(char *StrBuf) {
     int index = f_len;
     
     for(int j=0; j<f_len; ++j) {
-        if(StructFlash[j].mChip == CHIP_BQ24725 && StructFlash[j].mCmd == StrBuf[0]) {
+        if(StructFlash[j].mChip == CHIP_BQ24725 && StructFlash[j].mCmd == StrBuf[1]) {
             index = j;
         }
     }
     
-    for(int i = 0; i < StrBuf[2]; i++)
+    for(int i = 0; i < StrBuf[3]; i++)
     {
-        StructFlash[index].mValue[i] = StrBuf[ 3 + i ];
+        StructFlash[index].mValue[i] = StrBuf[ 4 + i ];
     }
     
     StructFlash[index].mChip = CHIP_BQ24725;
-    StructFlash[index].mCmd = StrBuf[0];
-    StructFlash[index].mLen = StrBuf[2];
+    StructFlash[index].mCmd = StrBuf[1];
+    StructFlash[index].mLen = StrBuf[3];
 
     Flash_Write((uint8_t *)&StructFlash, DEST_ADDR, sizeof(StructFlash));
     

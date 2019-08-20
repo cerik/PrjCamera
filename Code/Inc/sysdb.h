@@ -11,8 +11,8 @@
 #pragma anon_unions
 #endif
 
-#define CHIP_BQ24725 0x01
-#define CHIP_SYA1232 0x02
+#define CHIP_SYA1232 0x01
+#define CHIP_BQ24725 0x02
 
 typedef enum {
     NONE=0
@@ -45,7 +45,7 @@ typedef struct{
     UINT8  mChip;
     UINT8  mCmd;
     UINT8  mLen;
-    UINT8  mValue[6];
+    UINT8  mValue[2];
 }STRUCT_FLASH;
 
 #pragma pack()
