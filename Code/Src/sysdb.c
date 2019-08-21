@@ -14,7 +14,7 @@ unsigned int f_len = 0;
 STRUCT_FLASH StructFlash[flash_len];
 
 unsigned char BQ24725_Config[4][3] = {
-	{0x12, 0x12, 0x9D}, 
+	{0x12, 0x22, 0x9B}, 
 	{0x14, 0x00, 0x08}, 
 	{0x15, 0x00, 0x10}, 
 	{0x3F, 0x00, 0x10}
@@ -95,7 +95,6 @@ void usart1_receive_task(void const* arg)
                         tmp[j + 2] = buf[j];
                     }
                     write(USART1_ID, (char*)tmp, StrBuf[3] + 2);
-                    
                 } 
                 else if (StrBuf[2] == 0x57) //Write
                 {
